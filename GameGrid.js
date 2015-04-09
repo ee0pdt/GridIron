@@ -18,7 +18,7 @@ var GameGrid = React.createClass({
     for (var j = 0; j < columns.length; j++) {
       jewels.push(
         <View style={styles.column}>
-          <Jewel row={row} column={j} type={columns[j]}></Jewel>
+          <Jewel row={row} column={j} type={columns[j]} jewelPressCallback={this.props.jewelPressCallback}></Jewel>
         </View>
       );
     }
