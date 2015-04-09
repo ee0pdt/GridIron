@@ -45,6 +45,7 @@ var GridIron = React.createClass({
 
     this.setState({
       grid: gridStore,
+      score: 0,
       loaded: true,
     });
   },
@@ -110,32 +111,66 @@ var GridIron = React.createClass({
       column: column
     };
   },
+
+  _dropJewelsInColumn: function(grid, jewel) {
+    var temp = grid;
+
+    for (var i = jewel.row; i >= 0; i--) {
+      temp[i][jewel.column] = grid[i-1] ? grid[i-1][jewel.column] : Math.floor(Math.random() * 4) + 1;
+    }
+
+    return grid;
+  },
+
   jewelPressCallback: function(jewel) {
     var jewels = [];
     var temp = this.state.grid;
 
     jewels = this._findMatches(jewel, jewels);
-    console.log('matches '+jewels);
 
-    for (var i = 0; i < jewels.length; i++) {
-      if(jewels[i]) {
-        jewel = this._mapIndex(i);
-        console.log(gridStore);
-        console.log(jewel);
-        temp[jewel.row][jewel.column] = 0;
+    function add(a, b) {
+      return a + b;
+    }
+
+    var total = jewels.reduce(add, 0);
+    var score = this.state.score;
+
+    if(total > 2) {
+      for (var i = 0; i < jewels.length; i++) {
+        if(jewels[i]) {
+          jewel = this._mapIndex(i);
+          temp = this._dropJewelsInColumn(temp, jewel);
+        }
       }
+
+      if(total > 5) {
+        score = score + 50;
+      }
+      if(total > 8) {
+        score = score + 50;
+      }
+
+      score = score + total;
     }
 
     this.setState({
       grid: temp,
+      score: score,
       loaded: true,
     });
   },
 
   render: function() {
     return (
-      <View class={styles.container}>
-        <GameGrid grid={this.state.grid} jewelPressCallback={this.jewelPressCallback}></GameGrid>
+      <View style={styles.container}>
+        <View style={styles.score}>
+          <Text style={styles.scoreText}>Score: {this.state.score}</Text>
+        </View>
+
+        <View style={styles.gameGrid}>
+          <GameGrid grid={this.state.grid} jewelPressCallback={this.jewelPressCallback}></GameGrid>
+        </View>
+        
       </View>
     );
   }
@@ -143,28 +178,23 @@ var GridIron = React.createClass({
 
 var styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ff0000',
-    height: 320,
-    width: 600,
-    padding: 50,
-  },
-  grid: {
-    justifyContent: 'center',
-    backgroundColor: '#0000ff',
-    width: 320,
-    height: 320,
-  },
-  row: {
     flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#9E9E9E',
-  },
-  column: {
-    flex: 1,
-    backgroundColor: '#605E66',
-    margin: 1,
+    flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#000000',
+    marginTop: 20,
+    paddingTop: 30,
+  },
+  gameGrid: {
+    flex: 5,
+  },    
+  score: {
+    flex: 1,
+  },
+  scoreText: {
+    color: '#84B2F9',
+    fontSize: 30,
+    textAlign: 'center',
   }
 });
 
