@@ -10,6 +10,7 @@ var {
   Text,
   View,
   TouchableHighlight,
+  Animation,
 } = React;
 
 function jewelStyle(type) {
@@ -37,10 +38,14 @@ function jewelStyle(type) {
     width: 30,
     height: 30,
     borderColor: 'rgba(0,0,0,0.7)',
+    opacity: 0,
   };
 }
 
 var Jewel = React.createClass({
+  componentDidMount: function () {
+    Animation.startAnimation(this.refs['this'], 400, 0, 'linear', {opacity: 1});
+  },
   _onPressButton: function() {
     var type = this.props.type;
     var jewels = [];
@@ -55,9 +60,11 @@ var Jewel = React.createClass({
   },
   render: function() {
     return (
-      <TouchableHighlight onPress={this._onPressButton}>
-        <View style={jewelStyle(this.props.type)}></View>
-      </TouchableHighlight>
+      <View ref='this'>
+        <TouchableHighlight onPress={this._onPressButton}>
+          <View style={jewelStyle(this.props.type)}></View>
+        </TouchableHighlight>
+      </View>
     );
   }
 });
