@@ -27,7 +27,7 @@ var GridIron = React.createClass({
   },
 
   componentDidMount: function() {
-    this._initGrid(9, 9);
+    this._initGrid(3, 3);
   },
 
   _initGrid: function(rows, cols) {
@@ -163,14 +163,7 @@ var GridIron = React.createClass({
   render: function() {
     return (
       <View style={styles.container}>
-        <View style={styles.score}>
-          <Text style={styles.scoreText}>Score: {this.state.score}</Text>
-        </View>
-
-        <View style={styles.gameGrid}>
-          <GameGrid grid={this.state.grid} jewelPressCallback={this.jewelPressCallback}></GameGrid>
-        </View>
-        
+        <GameGrid grid={this.state.grid} jewelPressCallback={this.jewelPressCallback}></GameGrid>
       </View>
     );
   }
@@ -178,23 +171,14 @@ var GridIron = React.createClass({
 
 var styles = StyleSheet.create({
   container: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    backgroundColor: '#000000',
+    // flex: 1,
+    // flexDirection: 'column',
     marginTop: 20,
-    paddingTop: 30,
-  },
-  gameGrid: {
-    flex: 5,
-  },    
-  score: {
-    flex: 1,
-  },
-  scoreText: {
-    color: '#84B2F9',
-    fontSize: 30,
-    textAlign: 'center',
+    marginLeft: 20,
+    backgroundColor: '#434343',
+    position: 'absolute',
+    width: 270,
+    height: 270,
   }
 });
 

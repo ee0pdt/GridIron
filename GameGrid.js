@@ -17,16 +17,12 @@ var GameGrid = React.createClass({
     var jewels =[];
     for (var j = 0; j < columns.length; j++) {
       jewels.push(
-        <View style={styles.column}>
-          <Jewel row={row} column={j} type={columns[j]} jewelPressCallback={this.props.jewelPressCallback}></Jewel>
-        </View>
+        <Jewel row={row} column={j} type={columns[j]} jewelPressCallback={this.props.jewelPressCallback}></Jewel>
       );
     }
 
     return (
-      <View style={styles.row}>
-        {jewels}
-      </View>
+      {jewels}
     );
   },
   _renderRows: function() {
@@ -41,11 +37,9 @@ var GameGrid = React.createClass({
     return rows;
   },
   render: function() {
-    var rows = this._renderRows();
-
     return (
       <View style={styles.grid}>
-        {rows}
+        {this._renderRows()}
       </View>
     );
   }
@@ -53,22 +47,11 @@ var GameGrid = React.createClass({
 
 var styles = StyleSheet.create({
   grid: {
-    justifyContent: 'center',
-    backgroundColor: '#0000ff',
-    width: 320,
-    height: 320,
-  },
-  row: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#9E9E9E',
-  },
-  column: {
-    flex: 1,
-    backgroundColor: '#605E66',
-    margin: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: 'absolute',
+    width: 270,
+    height: 270,
+    top: 0,
+    left: 0,
   }
 });
 
