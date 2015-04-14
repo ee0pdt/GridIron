@@ -6,6 +6,7 @@
 var React = require('react-native');
 var TimerMixin = require('react-timer-mixin');
 var AnimationExperimental = require('AnimationExperimental');
+var JewelModel = require('JewelModel');
 
 var {
   StyleSheet,
@@ -44,7 +45,19 @@ function jewelStyle(type) {
 
 var Jewel = React.createClass({
   mixins: [TimerMixin],
+  getInitialState: function() {
+    return {
+      jewel: {},
+      loaded: false,
+    };
+  },
   componentDidMount: function () {
+    var jewel = new JewelModel(this.props.row, this.props.column, this.props.type);
+    this.setState({
+      jewel: jewel,
+      loaded: true,
+    });
+
     this.setTimeout(
       () => {
         this._calculatePosition();
@@ -53,23 +66,12 @@ var Jewel = React.createClass({
     );
   },
   _onPressButton: function() {
-    var type = this.props.type;
-    var jewels = [];
-
-    console.log('_onPressButton');
-
-    var jewel = {
-      row: this.props.row,
-      column: this.props.column,
-      type: this.props.type
-    };
-
-    this.props.jewelPressCallback(jewel);
+    this.props.jewelPressCallback(this.state.jewel);
   },
   _calculatePosition: function() {
     var pos = [
-      (this.props.column * 30) + 15,
-      (this.props.row * 30) + 15,
+      (this.state.jewel.column * 30) + 15,
+      (this.state.jewel.row * 30) + 15,
     ];
 
     if(this.refs['this']){

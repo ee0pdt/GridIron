@@ -13,33 +13,25 @@ var {
 } = React;
 
 var GameGrid = React.createClass({
-  _renderRow: function(grid, row, columns) {
-    var jewels =[];
-    for (var j = 0; j < columns.length; j++) {
-      jewels.push(
-        <Jewel row={row} column={j} type={columns[j]} jewelPressCallback={this.props.jewelPressCallback}></Jewel>
+  _renderJewels: function() {
+    var jewelComponents =[];
+    var jewels = this.props.gridModel.jewels;
+
+    for (var j = 0; j < jewels.length; j++) {
+      jewelComponents.push(
+        <Jewel row={jewels[j].row} column={jewels[j].column} type={jewels[j].type} jewelPressCallback={this.props.jewelPressCallback}></Jewel>
       );
     }
 
     return (
-      {jewels}
+      {jewelComponents}
     );
   },
-  _renderRows: function() {
-    var rows = [];
-    var columns;
-
-    for (var i = 0; i < this.props.grid.length; i++) {
-      columns = [];
-      rows.push(this._renderRow(this.props.grid, i, this.props.grid[i]));
-    }
-
-    return rows;
-  },
   render: function() {
+    var jewels = this._renderJewels();
     return (
       <View style={styles.grid}>
-        {this._renderRows()}
+        {jewels}
       </View>
     );
   }
