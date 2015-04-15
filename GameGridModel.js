@@ -116,7 +116,9 @@ GameGridModel.prototype.dropJewelsInColumn = function(grid, jewel) {
 
 GameGridModel.prototype.jewelPressCallback = function(jewel) {
   var jewels = [];
-  var temp = this.state.grid;
+  var temp = this.grid;
+
+  debugger;
 
   jewels = this.findMatches(jewel, jewels);
 
@@ -127,12 +129,13 @@ GameGridModel.prototype.jewelPressCallback = function(jewel) {
   var total = jewels.reduce(add, 0);
 
   if(total >= 3) {
-    for (var i = 0; i < jewels.length; i++) {
-      if(jewels[i]) {
-        jewel = this.mapIndex(i);
-        temp = this.dropJewelsInColumn(temp, jewel);
-      }
-    }
+    console.log(jewel);
+    // for (var i = 0; i < jewels.length; i++) {
+    //   if(jewels[i]) {
+    //     jewel = this.mapIndex(i);
+    //     temp = this.dropJewelsInColumn(temp, jewel);
+    //   }
+    // }
   }
 
   this.grid = temp;
