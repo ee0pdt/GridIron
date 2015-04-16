@@ -4,10 +4,11 @@
  */
 'use strict';
 
-var GameGridModel = function(rows, columns, types) {
+var GameGridModel = function(rows, columns, types, size) {
   this.rows = rows || 9;
   this.columns = columns || 9;
   this.types = types || 4;
+  this.jewelSize = size || 30;
   this.jewels = [];
   this.init();
 };
@@ -117,8 +118,6 @@ GameGridModel.prototype.dropJewelsInColumn = function(grid, jewel) {
 GameGridModel.prototype.jewelPressCallback = function(jewel) {
   var jewels = [];
   var temp = this.grid;
-
-  debugger;
 
   jewels = this.findMatches(jewel, jewels);
 

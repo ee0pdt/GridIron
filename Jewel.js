@@ -12,7 +12,6 @@ var {
   StyleSheet,
   Text,
   View,
-  TouchableHighlight,
 } = React;
 
 function jewelStyle(type) {
@@ -52,9 +51,8 @@ var Jewel = React.createClass({
     };
   },
   componentDidMount: function () {
-    var jewel = new JewelModel(this.props.row, this.props.column, this.props.type);
     this.setState({
-      jewel: jewel,
+      jewel: this.props.data,
       loaded: true,
     });
 
@@ -64,9 +62,6 @@ var Jewel = React.createClass({
       },
       10
     );
-  },
-  _onPressButton: function() {
-    this.props.jewelPressCallback(this.state.jewel);
   },
   _calculatePosition: function() {
     var pos = [
@@ -88,9 +83,7 @@ var Jewel = React.createClass({
   render: function() {
     return (
       <View ref='this' style={styles.jewelContainer}>
-        <TouchableHighlight style={styles.button} onPress={this._onPressButton}>
-          <View style={jewelStyle(this.props.type)} onPress={this._onPressButton}></View>
-        </TouchableHighlight>
+        <View style={jewelStyle(this.props.data.type)}></View>
       </View>
     );
   },
@@ -101,7 +94,6 @@ var styles = StyleSheet.create({
     width: 30,
     height: 30,
     position: 'absolute',
-    backgroundColor: 'rgba(0,0,0,0)',
   },
   button: {
     width: 30,

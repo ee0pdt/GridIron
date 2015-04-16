@@ -19,8 +19,26 @@ var {
 
 var gridStore;
 
-var GridIron = React.createClass({
-  getInitialState: function() {
+class GridIron extends React.Component {
+  handleTouchStart(event: Object) {
+    this.startX = event.nativeEvent.pageX;
+    this.startY = event.nativeEvent.pageY;
+  }
+
+  handleTouchEnd(event: Object) {
+    var x = event.nativeEvent.pageX;
+    var y = event.nativeEvent.pageY;
+
+    var deltaX = x - this.startX;
+    var deltaY = y - this.startY;
+
+    var column = Math.floor(x / this.props.gridModel.jewelSize);
+    var row = Math.floor(y / this.props.gridModel.jewelSize);
+
+    console.log(column, row);
+  }
+
+  getInitialState () {
     var grid = new GameGridModel(9, 9, 4);
 
     return {
@@ -28,22 +46,24 @@ var GridIron = React.createClass({
       score: 0,
       loaded: false,
     };
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount () {
     this.setState({
       loaded: true,
     });
-  },
+  }
 
-  render: function() {
+  render () {
     return (
-      <View style={styles.container}>
-        <GameGrid gridModel={this.state.gridModel} jewelPressCallback={this.state.gridModel.jewelPressCallback}></GameGrid>
+      <View style={styles.container} 
+            onTouchStart={(event) => this.handleTouchStart(event)}
+            onTouchEnd={(event) => this.handleTouchEnd(event)} >
+        <GameGrid gridModel={this.state.gridModel} ></GameGrid>
       </View>
     );
   }
-});
+}
 
 var styles = StyleSheet.create({
   container: {
