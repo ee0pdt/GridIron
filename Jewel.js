@@ -63,6 +63,14 @@ var Jewel = React.createClass({
       10
     );
   },
+  componentDidUpdate: function() {
+    this.setTimeout(
+      () => {
+        this._calculatePosition();
+      },
+      10
+    );
+  },
   _calculatePosition: function() {
     var pos = [
       (this.state.jewel.column * 30) + 15,

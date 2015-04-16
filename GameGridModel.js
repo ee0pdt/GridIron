@@ -17,17 +17,19 @@ var GameGridModel = function(rows, columns, types, size) {
 GameGridModel.prototype.init = function () {
   var data = [];
   var columns;
-  var jewels = []
+  var jewels = [];
+  var i = 0;
 
   for (var r = 0; r < this.rows; r++) {
     columns = [];
     for (var c = 0; c < this.columns; c++) {
-      columns[c] = Math.floor(Math.random() * 4) + 1;
-      jewels.push({
+      columns[c] = i;
+      jewels[i] = {
         column: c,
         row: r,
-        type: columns[c]
-      });
+        type: Math.floor(Math.random() * this.types) + 1,
+      };
+      i++;
     }
     data[r] = columns;
   }
@@ -36,11 +38,27 @@ GameGridModel.prototype.init = function () {
 };
 
 // Check if given type matches the one at the given row and column
-GameGridModel.prototype.matchType = function(row, column, type) {
-  if(this.grid[row] && this.grid[row][column] && this.grid[row][column] === type) {
+GameGridModel.prototype.matchType = function(row, column, jewel) {
+  if(this.grid[row] && this.grid[row][column] && this.getType(row, column) === jewel.type) {
     return 1;
   }
   return false;
+};
+
+// Get type of jewel at given grid position
+GameGridModel.prototype.getType = function(row, column) {
+  return this.getJewel(row, column).type;
+};
+
+// Get jewel at given grid position
+GameGridModel.prototype.getJewel = function(row, column) {
+  return this.jewels[this.mapToIndex(row, column)];
+};
+
+// Get jewel at given grid position
+GameGridModel.prototype.getJewelAtIndex = function(index) {
+  var point = this.mapIndex(index);
+  return this.jewels[this.mapToIndex(point.row, point.column)];
 };
 
 // Convert row and columns to cell index
@@ -56,8 +74,8 @@ GameGridModel.prototype.findMatches = function(jewel, matches) {
   row = jewel.row - 1;
   column = jewel.column;
 
-  if(!matches[this.mapToIndex(row, column)] && this.matchType(row, column, jewel.type)) {
-    matches[this.mapToIndex(row, column)] = 1;
+  if(matches.indexOf(this.mapToIndex(row, column)) === -1 && this.matchType(row, column, jewel)) {
+    matches.push(this.mapToIndex(row, column));
     matches = this.findMatches({row: row, column: column, type: jewel.type}, matches);
   }
 
@@ -65,8 +83,8 @@ GameGridModel.prototype.findMatches = function(jewel, matches) {
   row = jewel.row;
   column = jewel.column + 1;
 
-  if(!matches[this.mapToIndex(row, column)] && this.matchType(row, column, jewel.type)) {
-    matches[this.mapToIndex(row, column)] = 1;
+  if(matches.indexOf(this.mapToIndex(row, column)) === -1 && this.matchType(row, column, jewel)) {
+    matches.push(this.mapToIndex(row, column));
     matches = this.findMatches({row: row, column: column, type: jewel.type}, matches);
   }
 
@@ -74,8 +92,8 @@ GameGridModel.prototype.findMatches = function(jewel, matches) {
   row = jewel.row + 1;
   column = jewel.column;
 
-  if(!matches[this.mapToIndex(row, column)] && this.matchType(row, column, jewel.type)) {
-    matches[this.mapToIndex(row, column)] = 1;
+  if(matches.indexOf(this.mapToIndex(row, column)) === -1 && this.matchType(row, column, jewel)) {
+    matches.push(this.mapToIndex(row, column));
     matches = this.findMatches({row: row, column: column, type: jewel.type}, matches);
   }
 
@@ -83,8 +101,8 @@ GameGridModel.prototype.findMatches = function(jewel, matches) {
   row = jewel.row;
   column = jewel.column -1;
 
-  if(!matches[this.mapToIndex(row, column)] && this.matchType(row, column, jewel.type)) {
-    matches[this.mapToIndex(row, column)] = 1;
+  if(matches.indexOf(this.mapToIndex(row, column)) === -1 && this.matchType(row, column, jewel)) {
+    matches.push(this.mapToIndex(row, column));
     matches = this.findMatches({row: row, column: column, type: jewel.type}, matches);
   }
 

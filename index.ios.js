@@ -19,11 +19,11 @@ var {
 
 var gridStore;
 
-class GridIron extends React.Component {
+var GridIron = React.createClass({
   handleTouchStart(event: Object) {
     this.startX = event.nativeEvent.pageX;
     this.startY = event.nativeEvent.pageY;
-  }
+  },
 
   handleTouchEnd(event: Object) {
     var x = event.nativeEvent.pageX;
@@ -32,11 +32,27 @@ class GridIron extends React.Component {
     var deltaX = x - this.startX;
     var deltaY = y - this.startY;
 
-    var column = Math.floor(x / this.props.gridModel.jewelSize);
-    var row = Math.floor(y / this.props.gridModel.jewelSize);
+    var column = Math.floor(x / this.state.gridModel.jewelSize) - 1;
+    var row = Math.floor(y / this.state.gridModel.jewelSize) - 1;
 
-    console.log(column, row);
-  }
+    var jewel = this.state.gridModel.getJewel(row, column);
+    var matches = [this.state.gridModel.mapToIndex(row, column)];
+
+    matches = this.state.gridModel.findMatches(jewel, matches);
+    
+    var temp = this.state.gridModel;
+    
+    matches.forEach((match, index, length) => {
+      jewel = this.state.gridModel.getJewelAtIndex(match);
+      console.log(jewel);
+      temp.jewels[match].row = 10;
+      temp.jewels[match].column = 10;
+    });
+
+    this.setState({
+      gridModel: temp,
+    });
+  },
 
   getInitialState () {
     var grid = new GameGridModel(9, 9, 4);
@@ -46,13 +62,13 @@ class GridIron extends React.Component {
       score: 0,
       loaded: false,
     };
-  }
+  },
 
   componentDidMount () {
     this.setState({
       loaded: true,
     });
-  }
+  },
 
   render () {
     return (
@@ -62,8 +78,8 @@ class GridIron extends React.Component {
         <GameGrid gridModel={this.state.gridModel} ></GameGrid>
       </View>
     );
-  }
-}
+  },
+});
 
 var styles = StyleSheet.create({
   container: {
