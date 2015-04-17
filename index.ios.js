@@ -44,23 +44,29 @@ var GridIron = React.createClass({
       return a - b;
     });
 
-    var clone = function (obj) {
-      var Clone = function () {};
-      Clone.prototype = obj;
-      return new Clone();
-    };
+    console.log(matches);
     
-    var temp = clone(this.state.gridModel);
+    if(matches.length >2) {
+      matches.forEach((index) => {
+        jewel = this.state.gridModel.getJewelAtIndex(index);
+        
+        this.state.gridModel.bubbleJewel(jewel, index);
+      });
+    }
     
-    matches.forEach((index) => {
-      jewel = temp.getJewelAtIndex(index);
-      
-      temp.bubbleJewel(jewel, index);
-    });
+    var grid = this.state.gridModel.grid;
 
-    this.setState({
-      gridModel: temp,
-    });
+    console.log("----- Grid -----");
+    var row;
+    for (var r = 0; r < grid.length; r++) {
+      row = [];
+      for (var c = 0; c < grid.length; c++) {
+        row.push(grid[r][c].type);
+      }
+      console.log(row);
+    }
+
+    this.forceUpdate();
   },
 
   getInitialState () {

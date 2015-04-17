@@ -51,12 +51,11 @@ var Jewel = React.createClass({
     };
   },
   componentDidMount: function () {
-    console.log('componentDidMount');
     var jewel = new JewelModel({
-                                row: this.props.row,
-                                column: this.props.column,
-                                type: this.props.type,
-                              });
+                      row: this.props.row,
+                      column: this.props.column,
+                      type: this.props.type,
+                    });
 
     this.setState({
       jewel: jewel,
@@ -64,24 +63,20 @@ var Jewel = React.createClass({
     });
   },
   componentWillReceiveProps: function(nextProps) {
-    //console.log('componentWillReceiveProps');
     var jewel = new JewelModel({
-                                row: nextProps.row,
-                                column: nextProps.column,
-                                type: nextProps.type,
-                              });
+                      row: nextProps.row,
+                      column: nextProps.column,
+                      type: nextProps.type,
+                    });
 
     this.setState({
       jewel: jewel,
     });
   },
   shouldComponentUpdate: function(nextProps, nextState) {
-    //console.log('shouldComponentUpdate');
     if(!this.state.jewel.type || this.state.jewel.type !== nextProps.type || this.state.jewel.row !== nextProps.row) {
-      //console.log('true');
       return true;
     }
-    //console.log('false');
     return false;
   },
   _calculatePosition: function() { 

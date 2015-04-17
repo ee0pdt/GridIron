@@ -12,11 +12,16 @@ var {
   View,
 } = React;
 
-class GameGrid extends React.Component {
-
-  _renderJewels () {
+var GameGrid = React.createClass({
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+      gridModel: nextProps.gridModel,
+    });
+  },
+  _renderJewels: function() {
     var jewelComponents =[];
     var jewels = this.props.gridModel.jewels;
+    var grid = this.props.gridModel.grid;
 
     for (var j = 0; j < jewels.length; j++) {
       jewelComponents.push(
@@ -27,9 +32,8 @@ class GameGrid extends React.Component {
     return (
       {jewelComponents}
     );
-  }
-
-  render () {
+  },
+  render: function () {
     var jewels = this._renderJewels();
     return (
       <View style={styles.grid}>
@@ -37,7 +41,7 @@ class GameGrid extends React.Component {
       </View>
     );
   }
-}
+});
 
 var styles = StyleSheet.create({
   grid: {

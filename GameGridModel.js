@@ -63,7 +63,7 @@ GameGridModel.prototype.getJewel = function(row, column) {
 // Get jewel at given grid position
 GameGridModel.prototype.getJewelAtIndex = function(index) {
   var point = this.mapIndex(index);
-  return this.jewels[this.mapToIndex(point.row, point.column)];
+  return this.getJewel(point.row, point.column);
 };
 
 // Convert row and columns to cell index
@@ -154,44 +154,16 @@ GameGridModel.prototype.bubbleJewel = function(jewel) {
     this.updateGridWithJewel(jewelAbove);
 
     // Continue bubbling
+    jewel.type = 0;
     this.bubbleJewel(jewel);
-  } else {
-    if(jewel.type === 0) {
-      // Reset jewel to random type
-      jewel.type = Math.floor(Math.random() * this.types) + 1;
-      this.updateGridWithJewel(jewel);
-    }
   }
+
+  jewel.type = Math.floor(Math.random() * this.types) + 1;
 };
 
 // Update grid to reflect jewel change
 GameGridModel.prototype.updateGridWithJewel = function(jewel) {
   this.grid[jewel.row][jewel.column] = jewel;
 };
-
-GameGridModel.prototype.jewelPressCallback = function(jewel) {
-  var jewels = [];
-  var temp = this.grid;
-
-  jewels = this.findMatches(jewel, jewels);
-
-  function add(a, b) {
-    return a + b;
-  }
-
-  var total = jewels.reduce(add, 0);
-
-  if(total >= 3) {
-    console.log(jewel);
-    // for (var i = 0; i < jewels.length; i++) {
-    //   if(jewels[i]) {
-    //     jewel = this.mapIndex(i);
-    //     temp = this.dropJewelsInColumn(temp, jewel);
-    //   }
-    // }
-  }
-
-  this.grid = temp;
-},
 
 module.exports = GameGridModel;
