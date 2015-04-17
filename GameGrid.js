@@ -20,7 +20,7 @@ class GameGrid extends React.Component {
 
     for (var j = 0; j < jewels.length; j++) {
       jewelComponents.push(
-        <Jewel data={jewels[j]}></Jewel>
+        <Jewel row={jewels[j].row} column={jewels[j].column} type={jewels[j].type}></Jewel>
       );
     }
 

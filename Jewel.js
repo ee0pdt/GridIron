@@ -51,47 +51,62 @@ var Jewel = React.createClass({
     };
   },
   componentDidMount: function () {
+    console.log('componentDidMount');
+    var jewel = new JewelModel({
+                                row: this.props.row,
+                                column: this.props.column,
+                                type: this.props.type,
+                              });
+
     this.setState({
-      jewel: this.props.data,
+      jewel: jewel,
       loaded: true,
     });
-
-    this.setTimeout(
-      () => {
-        this._calculatePosition();
-      },
-      10
-    );
   },
-  componentDidUpdate: function() {
-    this.setTimeout(
-      () => {
-        this._calculatePosition();
-      },
-      10
-    );
-  },
-  _calculatePosition: function() {
-    var pos = [
-      (this.state.jewel.column * 30) + 15,
-      (this.state.jewel.row * 30) + 15,
-    ];
+  componentWillReceiveProps: function(nextProps) {
+    //console.log('componentWillReceiveProps');
+    var jewel = new JewelModel({
+                                row: nextProps.row,
+                                column: nextProps.column,
+                                type: nextProps.type,
+                              });
 
+    this.setState({
+      jewel: jewel,
+    });
+  },
+  shouldComponentUpdate: function(nextProps, nextState) {
+    //console.log('shouldComponentUpdate');
+    if(!this.state.jewel.type || this.state.jewel.type !== nextProps.type || this.state.jewel.row !== nextProps.row) {
+      //console.log('true');
+      return true;
+    }
+    //console.log('false');
+    return false;
+  },
+  _calculatePosition: function() { 
     if(this.refs['this']){
       AnimationExperimental.startAnimation(
       {
         node: this.refs['this'],
-        duration: 1000,
+        duration: 500,
         easing: 'easeInOutQuad',
         property: 'position',
-        toValue: pos,
+        toValue: this.state.jewel.getPosition(),
       });
     }
   },
   render: function() {
+    var jewel = this.state.jewel;
+    this.setTimeout(
+      () => {
+        this._calculatePosition();
+      },
+      10
+    );
     return (
       <View ref='this' style={styles.jewelContainer}>
-        <View style={jewelStyle(this.props.data.type)}></View>
+        <View style={jewelStyle(jewel.type)}></View>
       </View>
     );
   },
@@ -101,6 +116,8 @@ var styles = StyleSheet.create({
   jewelContainer: {
     width: 30,
     height: 30,
+    top: 0,
+    left: 0,
     position: 'absolute',
   },
   button: {

@@ -39,14 +39,23 @@ var GridIron = React.createClass({
     var matches = [this.state.gridModel.mapToIndex(row, column)];
 
     matches = this.state.gridModel.findMatches(jewel, matches);
+
+    matches.sort(function(a, b) {
+      return a - b;
+    });
+
+    var clone = function (obj) {
+      var Clone = function () {};
+      Clone.prototype = obj;
+      return new Clone();
+    };
     
-    var temp = this.state.gridModel;
+    var temp = clone(this.state.gridModel);
     
-    matches.forEach((match, index, length) => {
-      jewel = this.state.gridModel.getJewelAtIndex(match);
-      console.log(jewel);
-      temp.jewels[match].row = 10;
-      temp.jewels[match].column = 10;
+    matches.forEach((index) => {
+      jewel = temp.getJewelAtIndex(index);
+      
+      temp.bubbleJewel(jewel, index);
     });
 
     this.setState({

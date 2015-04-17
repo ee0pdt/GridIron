@@ -4,6 +4,8 @@
  */
 'use strict';
 
+var JewelModel = require('JewelModel');
+
 var GameGridModel = function(rows, columns, types, size) {
   this.rows = rows || 9;
   this.columns = columns || 9;
@@ -23,12 +25,15 @@ GameGridModel.prototype.init = function () {
   for (var r = 0; r < this.rows; r++) {
     columns = [];
     for (var c = 0; c < this.columns; c++) {
-      columns[c] = i;
-      jewels[i] = {
+      
+      jewels[i] = new JewelModel({
         column: c,
         row: r,
         type: Math.floor(Math.random() * this.types) + 1,
-      };
+        size: this.jewelSize,
+      });
+
+      columns[c] = jewels[i];
       i++;
     }
     data[r] = columns;
@@ -52,7 +57,7 @@ GameGridModel.prototype.getType = function(row, column) {
 
 // Get jewel at given grid position
 GameGridModel.prototype.getJewel = function(row, column) {
-  return this.jewels[this.mapToIndex(row, column)];
+  return this.grid[row][column];
 };
 
 // Get jewel at given grid position
@@ -131,6 +136,37 @@ GameGridModel.prototype.dropJewelsInColumn = function(grid, jewel) {
   }
 
   return grid;
+};
+
+// Keep bubbling jewel upwards
+GameGridModel.prototype.bubbleJewel = function(jewel) {
+  var jewelAbove;
+
+  if(jewel.row > 0) {
+    jewelAbove = this.getJewel(jewel.row-1, jewel.column);
+
+    // Swap jewel positions
+    jewelAbove.row++;
+    jewel.row--;
+
+    // Log new jewels in grid
+    this.updateGridWithJewel(jewel);
+    this.updateGridWithJewel(jewelAbove);
+
+    // Continue bubbling
+    this.bubbleJewel(jewel);
+  } else {
+    if(jewel.type === 0) {
+      // Reset jewel to random type
+      jewel.type = Math.floor(Math.random() * this.types) + 1;
+      this.updateGridWithJewel(jewel);
+    }
+  }
+};
+
+// Update grid to reflect jewel change
+GameGridModel.prototype.updateGridWithJewel = function(jewel) {
+  this.grid[jewel.row][jewel.column] = jewel;
 };
 
 GameGridModel.prototype.jewelPressCallback = function(jewel) {
