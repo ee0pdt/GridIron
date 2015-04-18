@@ -158,7 +158,31 @@ GameGridModel.prototype.bubbleJewel = function(jewel) {
     this.bubbleJewel(jewel);
   }
 
-  jewel.type = Math.floor(Math.random() * this.types) + 1;
+  //jewel.type = Math.floor(Math.random() * this.types) + 1;
+};
+
+GameGridModel.prototype.swapJewels = function(jewelA, jewelB) {
+  var r1, c1, r2, c2;
+
+  console.log(jewelA, jewelB);
+
+  r1 = Math.abs(jewelA.row);
+  c1 = Math.abs(jewelA.column);
+
+  r2 = Math.abs(jewelB.row);
+  c2 = Math.abs(jewelB.column);
+
+  jewelA.row = r2;
+  jewelA.column = c2;
+
+  jewelB.row = r1;
+  jewelB.column = c1;
+
+  // Log new jewels in grid
+  this.updateGridWithJewel(jewelA);
+  this.updateGridWithJewel(jewelB);
+
+  console.log(jewelA, jewelB);
 };
 
 // Update grid to reflect jewel change

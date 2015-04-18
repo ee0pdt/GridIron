@@ -21,49 +21,56 @@ var gridStore;
 
 var GridIron = React.createClass({
   handleTouchStart(event: Object) {
-    this.startX = event.nativeEvent.pageX;
-    this.startY = event.nativeEvent.pageY;
-  },
+    var gridModel = this.state.gridModel;
 
-  handleTouchEnd(event: Object) {
     var x = event.nativeEvent.pageX;
     var y = event.nativeEvent.pageY;
 
-    var deltaX = x - this.startX;
-    var deltaY = y - this.startY;
+    this.startColumn = Math.floor(x / gridModel.jewelSize) - 1;
+    this.startRow = Math.floor(y / gridModel.jewelSize) - 1;
+  },
 
-    var column = Math.floor(x / this.state.gridModel.jewelSize) - 1;
-    var row = Math.floor(y / this.state.gridModel.jewelSize) - 1;
+  handleTouchEnd(event: Object) {
+    var gridModel = this.state.gridModel;
 
-    var jewel = this.state.gridModel.getJewel(row, column);
-    var matches = [this.state.gridModel.mapToIndex(row, column)];
+    var x = event.nativeEvent.pageX;
+    var y = event.nativeEvent.pageY;
 
-    matches = this.state.gridModel.findMatches(jewel, matches);
+    var column = Math.floor(x / gridModel.jewelSize) - 1;
+    var row = Math.floor(y / gridModel.jewelSize) - 1;
 
-    matches.sort(function(a, b) {
-      return a - b;
-    });
+    if(column === this.startColumn && row === this.startRow) {
+      var jewel = gridModel.getJewel(row, column);
+      var matches = [gridModel.mapToIndex(row, column)];
 
-    console.log(matches);
-    
-    if(matches.length >2) {
-      matches.forEach((index) => {
-        jewel = this.state.gridModel.getJewelAtIndex(index);
-        
-        this.state.gridModel.bubbleJewel(jewel, index);
+      matches = gridModel.findMatches(jewel, matches);
+
+      matches.sort(function(a, b) {
+        return a - b;
       });
-    }
-    
-    var grid = this.state.gridModel.grid;
-
-    console.log("----- Grid -----");
-    var row;
-    for (var r = 0; r < grid.length; r++) {
-      row = [];
-      for (var c = 0; c < grid.length; c++) {
-        row.push(grid[r][c].type);
+      
+      if(matches.length >2) {
+        matches.forEach((index) => {
+          jewel = gridModel.getJewelAtIndex(index);
+          
+          gridModel.bubbleJewel(jewel, index);
+        });
       }
-      console.log(row);
+    } else {
+      var diff = Math.abs(this.startRow - row) + Math.abs(this.startColumn - column);
+
+      var jewelA = gridModel.getJewel(row, column);
+      var jewelB = gridModel.getJewel(this.startRow, this.startColumn);
+
+      console.log('('+this.startColumn+','+this.startRow+')', '('+column+','+row+')', diff);
+      
+      if(diff > 1) {
+        return 0;
+      }
+
+      if(jewelA && jewelB && jewelA.type !== 0 && jewelB.type !== 0) {
+        gridModel.swapJewels(jewelA, jewelB);
+      }
     }
 
     this.forceUpdate();

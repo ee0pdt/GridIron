@@ -74,7 +74,7 @@ var Jewel = React.createClass({
     });
   },
   shouldComponentUpdate: function(nextProps, nextState) {
-    if(!this.state.jewel.type || this.state.jewel.type !== nextProps.type || this.state.jewel.row !== nextProps.row) {
+    if(!this.state.jewel.type || this.state.jewel.type !== nextProps.type || this.state.jewel.row !== nextProps.row || this.state.jewel.column !== nextProps.column) {
       return true;
     }
     return false;
@@ -93,6 +93,18 @@ var Jewel = React.createClass({
   },
   render: function() {
     var jewel = this.state.jewel;
+
+    if(jewel.type===0){
+      AnimationExperimental.startAnimation(
+      {
+        node: this.refs['this'],
+        duration: 500,
+        easing: 'easeInOutQuad',
+        property: 'opacity',
+        toValue: 0,
+      });
+    }
+
     this.setTimeout(
       () => {
         this._calculatePosition();
