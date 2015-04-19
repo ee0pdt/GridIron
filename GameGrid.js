@@ -13,15 +13,25 @@ var {
 } = React;
 
 var GameGrid = React.createClass({
+  getInitialState () {
+    return {
+      gridModel: null,
+      loaded: false,
+    };
+  },
   componentWillReceiveProps: function(nextProps) {
     this.setState({
       gridModel: nextProps.gridModel,
     });
   },
   _renderJewels: function() {
+    if(!this.state.gridModel) {
+      return null;
+    }
+
     var jewelComponents =[];
-    var jewels = this.props.gridModel.jewels;
-    var grid = this.props.gridModel.grid;
+    var jewels = this.state.gridModel.jewels;
+    var grid = this.state.gridModel.grid;
 
     for (var j = 0; j < jewels.length; j++) {
       jewelComponents.push(

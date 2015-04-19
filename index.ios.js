@@ -8,6 +8,7 @@ var React = require('react-native');
 var GameGrid = require('./GameGrid');
 var GameGridModel = require('./GameGridModel');
 var TimerMixin = require('react-timer-mixin');
+var Viewport = require('react-native-viewport');
 
 var {
   AppRegistry,
@@ -81,18 +82,26 @@ var GridIron = React.createClass({
   },
 
   getInitialState () {
-    var grid = new GameGridModel(9, 9, 4);
-
     return {
-      gridModel: grid,
       score: 0,
       loaded: false,
     };
   },
 
   componentDidMount () {
+    var viewport = Viewport.getDimensions(this._handleViewportChange);
+    var grid = new GameGridModel(9, 9, 4);
+
     this.setState({
       loaded: true,
+      gridModel: grid,
+    });
+  },
+
+  _handleViewportChange (viewport) {
+    console.log(viewport);
+    this.setState({
+      viewport: viewport,
     });
   },
 
@@ -101,7 +110,7 @@ var GridIron = React.createClass({
       <View style={styles.container} 
             onTouchStart={(event) => this.handleTouchStart(event)}
             onTouchEnd={(event) => this.handleTouchEnd(event)} >
-        <GameGrid gridModel={this.state.gridModel} ></GameGrid>
+        <GameGrid gridModel={this.state.gridModel} viewport={this.state.viewport}></GameGrid>
       </View>
     );
   },
