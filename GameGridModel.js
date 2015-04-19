@@ -29,8 +29,8 @@ GameGridModel.prototype.init = function () {
       jewels[i] = new JewelModel({
         column: c,
         row: r,
-        type: Math.floor(Math.random() * this.types) + 1,
         size: this.jewelSize,
+        type: Math.floor(Math.random() * this.types) + 1,
       });
 
       columns[c] = jewels[i];
@@ -127,17 +127,6 @@ GameGridModel.prototype.mapIndex = function(index) {
   };
 };
 
-// @todo rewrite this function
-GameGridModel.prototype.dropJewelsInColumn = function(grid, jewel) {
-  var temp = grid;
-
-  for (var i = jewel.row; i >= 0; i--) {
-    temp[i][jewel.column] = grid[i-1] ? grid[i-1][jewel.column] : Math.floor(Math.random() * 4) + 1;
-  }
-
-  return grid;
-};
-
 // Keep bubbling jewel upwards
 GameGridModel.prototype.bubbleJewel = function(jewel) {
   var jewelAbove;
@@ -157,8 +146,6 @@ GameGridModel.prototype.bubbleJewel = function(jewel) {
     jewel.type = 0;
     this.bubbleJewel(jewel);
   }
-
-  //jewel.type = Math.floor(Math.random() * this.types) + 1;
 };
 
 GameGridModel.prototype.swapJewels = function(jewelA, jewelB) {

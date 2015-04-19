@@ -7,6 +7,7 @@
 var React = require('react-native');
 var GameGrid = require('./GameGrid');
 var GameGridModel = require('./GameGridModel');
+var TimerMixin = require('react-timer-mixin');
 
 var {
   AppRegistry,
@@ -20,6 +21,8 @@ var {
 var gridStore;
 
 var GridIron = React.createClass({
+  mixins: [TimerMixin],
+
   handleTouchStart(event: Object) {
     var gridModel = this.state.gridModel;
 
@@ -54,6 +57,7 @@ var GridIron = React.createClass({
           jewel = gridModel.getJewelAtIndex(index);
           
           gridModel.bubbleJewel(jewel, index);
+          jewel.type = Math.floor(Math.random() * this.state.gridModel.types) + 1;
         });
       }
     } else {

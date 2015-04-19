@@ -98,18 +98,29 @@ var Jewel = React.createClass({
       AnimationExperimental.startAnimation(
       {
         node: this.refs['this'],
-        duration: 500,
+        duration: 50,
         easing: 'easeInOutQuad',
         property: 'opacity',
         toValue: 0,
       });
+    } else {
+      if(this.refs['this']) {
+        AnimationExperimental.startAnimation(
+        {
+          node: this.refs['this'],
+          duration: 50,
+          easing: 'easeInOutQuad',
+          property: 'opacity',
+          toValue: 1,
+        });
+      }
     }
 
     this.setTimeout(
       () => {
         this._calculatePosition();
       },
-      10
+      50
     );
     return (
       <View ref='this' style={styles.jewelContainer}>
