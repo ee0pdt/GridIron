@@ -21,6 +21,34 @@ var {
 
 var gridStore;
 
+function containerStyle(viewport) {
+  console.log(viewport);
+  
+  if(!viewport) {
+    return {
+      top: 0,
+      left: 0,
+      width: 0,
+      height: 0,
+      marginTop: 0,
+      backgroundColor: '#434343',
+      position: 'absolute',
+    };
+  }
+
+  var gridSize = viewport.width < viewport.height ? viewport.width : viewport.height;
+
+  return {
+    width: gridSize,
+    height: gridSize,
+    top: 0,
+    left: 0,
+    marginTop: 0,
+    backgroundColor: '#434343',
+    position: 'absolute',
+  };
+}
+
 var GridIron = React.createClass({
   mixins: [TimerMixin],
 
@@ -30,8 +58,8 @@ var GridIron = React.createClass({
     var x = event.nativeEvent.pageX;
     var y = event.nativeEvent.pageY;
 
-    this.startColumn = Math.floor(x / gridModel.jewelSize) - 1;
-    this.startRow = Math.floor(y / gridModel.jewelSize) - 1;
+    this.startColumn = Math.floor(x / gridModel.jewelSize);
+    this.startRow = Math.floor(y / gridModel.jewelSize);
   },
 
   handleTouchEnd(event: Object) {
@@ -40,8 +68,10 @@ var GridIron = React.createClass({
     var x = event.nativeEvent.pageX;
     var y = event.nativeEvent.pageY;
 
-    var column = Math.floor(x / gridModel.jewelSize) - 1;
-    var row = Math.floor(y / gridModel.jewelSize) - 1;
+    var column = Math.floor(x / gridModel.jewelSize);
+    var row = Math.floor(y / gridModel.jewelSize);
+
+    console.log(x, y, gridModel.jewelSize, column, row);
 
     if(column === this.startColumn && row === this.startRow) {
       var jewel = gridModel.getJewel(row, column);
@@ -66,8 +96,6 @@ var GridIron = React.createClass({
 
       var jewelA = gridModel.getJewel(row, column);
       var jewelB = gridModel.getJewel(this.startRow, this.startColumn);
-
-      console.log('('+this.startColumn+','+this.startRow+')', '('+column+','+row+')', diff);
       
       if(diff > 1) {
         return 0;
@@ -82,6 +110,8 @@ var GridIron = React.createClass({
   },
 
   getInitialState () {
+    Viewport.getDimensions(this._handleViewportChange);
+
     return {
       score: 0,
       loaded: false,
@@ -89,42 +119,32 @@ var GridIron = React.createClass({
   },
 
   componentDidMount () {
-    var viewport = Viewport.getDimensions(this._handleViewportChange);
-    var grid = new GameGridModel(9, 9, 4);
-
     this.setState({
+      loaded: false,
+    });
+  },
+
+  _handleViewportChange (viewport) {
+    console.log('_handleViewportChange', viewport);
+    var gridSize = viewport.width < viewport.height ? viewport.width : viewport.height;
+    var grid = new GameGridModel(9, 9, 4, gridSize);
+    
+    this.setState({
+      viewport: viewport,
       loaded: true,
       gridModel: grid,
     });
   },
 
-  _handleViewportChange (viewport) {
-    console.log(viewport);
-    this.setState({
-      viewport: viewport,
-    });
-  },
-
   render () {
     return (
-      <View style={styles.container} 
+      <View style={containerStyle(this.state.viewport)} 
             onTouchStart={(event) => this.handleTouchStart(event)}
             onTouchEnd={(event) => this.handleTouchEnd(event)} >
         <GameGrid gridModel={this.state.gridModel} viewport={this.state.viewport}></GameGrid>
       </View>
     );
   },
-});
-
-var styles = StyleSheet.create({
-  container: {
-    marginTop: 20,
-    marginLeft: 20,
-    backgroundColor: '#434343',
-    position: 'absolute',
-    width: 270,
-    height: 270,
-  }
 });
 
 AppRegistry.registerComponent('GridIron', () => GridIron);

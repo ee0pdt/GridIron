@@ -6,11 +6,12 @@
 
 var JewelModel = require('JewelModel');
 
-var GameGridModel = function(rows, columns, types, size) {
+var GameGridModel = function(rows, columns, types, gridSize) {
   this.rows = rows || 9;
   this.columns = columns || 9;
   this.types = types || 4;
-  this.jewelSize = size || 30;
+  this.jewelSize = gridSize/this.columns;
+  this.gridSize = gridSize;
   this.jewels = [];
   this.init();
 };
@@ -40,6 +41,7 @@ GameGridModel.prototype.init = function () {
   }
   this.jewels = jewels;
   this.grid = data;
+  console.log(this.grid);
 };
 
 // Check if given type matches the one at the given row and column
@@ -57,6 +59,7 @@ GameGridModel.prototype.getType = function(row, column) {
 
 // Get jewel at given grid position
 GameGridModel.prototype.getJewel = function(row, column) {
+  console.log(row, column, this.grid);
   return this.grid[row][column];
 };
 
@@ -151,8 +154,6 @@ GameGridModel.prototype.bubbleJewel = function(jewel) {
 GameGridModel.prototype.swapJewels = function(jewelA, jewelB) {
   var r1, c1, r2, c2;
 
-  console.log(jewelA, jewelB);
-
   r1 = Math.abs(jewelA.row);
   c1 = Math.abs(jewelA.column);
 
@@ -168,8 +169,6 @@ GameGridModel.prototype.swapJewels = function(jewelA, jewelB) {
   // Log new jewels in grid
   this.updateGridWithJewel(jewelA);
   this.updateGridWithJewel(jewelB);
-
-  console.log(jewelA, jewelB);
 };
 
 // Update grid to reflect jewel change

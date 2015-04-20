@@ -12,30 +12,48 @@ var {
   View,
 } = React;
 
+function gridStyle(viewport) {
+  if(viewport) {
+    var gridSize = viewport.width < viewport.height ? viewport.width : viewport.height;
+    return {
+      position: 'absolute',
+      width: gridSize,
+      height: gridSize,
+      top: 0,
+      left: 0,
+    };
+  } else {
+    return null;
+  }
+}
+
 var GameGrid = React.createClass({
   getInitialState () {
     return {
       gridModel: null,
       loaded: false,
+      viewport: null,
     };
   },
   componentWillReceiveProps: function(nextProps) {
     this.setState({
       gridModel: nextProps.gridModel,
+      viewport: nextProps.viewport,
     });
   },
   _renderJewels: function() {
-    if(!this.state.gridModel) {
+    if(!this.state.gridModel || !this.state.viewport) {
       return null;
     }
 
     var jewelComponents =[];
     var jewels = this.state.gridModel.jewels;
-    var grid = this.state.gridModel.grid;
+    var gridSize = this.props.viewport.width < this.props.viewport.height ? this.props.viewport.width : this.props.viewport.height;
+    var jewelWidth = gridSize / this.state.gridModel.grid.length;
 
     for (var j = 0; j < jewels.length; j++) {
       jewelComponents.push(
-        <Jewel row={jewels[j].row} column={jewels[j].column} type={jewels[j].type}></Jewel>
+        <Jewel row={jewels[j].row} column={jewels[j].column} type={jewels[j].type} width={jewelWidth}></Jewel>
       );
     }
 
@@ -46,20 +64,10 @@ var GameGrid = React.createClass({
   render: function () {
     var jewels = this._renderJewels();
     return (
-      <View style={styles.grid}>
+      <View style={gridStyle(this.state.viewport)}>
         {jewels}
       </View>
     );
-  }
-});
-
-var styles = StyleSheet.create({
-  grid: {
-    position: 'absolute',
-    width: 270,
-    height: 270,
-    top: 0,
-    left: 0,
   }
 });
 

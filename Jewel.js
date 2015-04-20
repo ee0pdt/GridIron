@@ -14,10 +14,10 @@ var {
   View,
 } = React;
 
-function jewelStyle(type) {
+function jewelStyle(jewel) {
   var jewelColor;
 
-  switch(type) {
+  switch(jewel.type) {
     case 0:
       jewelColor = '#FF337B';
       break;
@@ -34,11 +34,20 @@ function jewelStyle(type) {
       jewelColor = '#287DFF';
   }
   return {
-    borderRadius: 15,
+    borderRadius: jewel.width/2,
     backgroundColor: jewelColor,
-    width: 30,
-    height: 30,
-    borderColor: 'rgba(0,0,0,0.7)',
+    width: jewel.width,
+    height: jewel.width,
+  };
+}
+
+function jewelContainerStyle(width) {
+  return {
+    width: width,
+    height: width,
+    top: 0,
+    left: 0,
+    position: 'absolute',
   };
 }
 
@@ -55,6 +64,7 @@ var Jewel = React.createClass({
                       row: this.props.row,
                       column: this.props.column,
                       type: this.props.type,
+                      width: this.props.width,
                     });
 
     this.setState({
@@ -67,6 +77,7 @@ var Jewel = React.createClass({
                       row: nextProps.row,
                       column: nextProps.column,
                       type: nextProps.type,
+                      width: this.props.width,
                     });
 
     this.setState({
@@ -123,24 +134,10 @@ var Jewel = React.createClass({
       50
     );
     return (
-      <View ref='this' style={styles.jewelContainer}>
-        <View style={jewelStyle(jewel.type)}></View>
+      <View ref='this' style={jewelContainerStyle(jewel.width)}>
+        <View style={jewelStyle(jewel)}></View>
       </View>
     );
-  },
-});
-
-var styles = StyleSheet.create({
-  jewelContainer: {
-    width: 30,
-    height: 30,
-    top: 0,
-    left: 0,
-    position: 'absolute',
-  },
-  button: {
-    width: 30,
-    height: 30,
   },
 });
 
